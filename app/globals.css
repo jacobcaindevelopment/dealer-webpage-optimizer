@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    background-color: #0a0a0a;
+    color: #f0f0f0;
+    font-family: var(--font-body), sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: #111; }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 9px; }
+  ::-webkit-scrollbar-thumb:hover { background: #444; }
+
+  * { box-sizing: border-box; }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface border border-border rounded-xl overflow-hidden;
+  }
+  .card-2 {
+    @apply bg-surface-2 border border-border rounded-xl overflow-hidden;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm bg-red text-white transition-all duration-150 hover:bg-red-light hover:shadow-lg hover:shadow-red/20 disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-sm border border-border-2 text-txt-2 transition-all duration-150 hover:border-red hover:text-red hover:bg-red-dim disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+  .btn-sm {
+    @apply px-3.5 py-1.5 text-xs;
+  }
+  .inp {
+    @apply w-full px-3.5 py-2.5 bg-surface-2 border border-border-2 rounded-lg text-sm text-txt placeholder-txt-4 outline-none transition-all duration-150 focus:border-red focus:ring-2 focus:ring-red/10 font-body;
+  }
+  .lbl {
+    @apply block text-xs font-semibold text-txt-3 mb-1.5 uppercase tracking-wider;
+  }
+  .badge-critical {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red/10 text-red border border-red/20;
+  }
+  .badge-high {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amb/10 text-amb border border-amb/20;
+  }
+  .badge-medium {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-500/10 text-yellow-400 border border-yellow-500/20;
+  }
+  .badge-low {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-grn/10 text-grn border border-grn/20;
+  }
+  .page-enter {
+    animation: fadeUp 0.2s ease both;
+  }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
