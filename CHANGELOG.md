@@ -142,3 +142,8 @@ The `splitTextToSize(text, width)` parameter is a **text-column width** measured
 - Tailwind CSS custom design system
 - jsPDF + jspdf-autotable for PDF generation
 - sessionStorage for inter-page state, localStorage for audit history
+
+## v1.0.7
+- Removed password gate — app is now public
+- Deleted middleware.ts, app/access, api/access, api/logout
+- Removed Lock link from Nav

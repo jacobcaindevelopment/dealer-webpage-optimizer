@@ -9,15 +9,8 @@ export default function Nav() {
         <Logo size="sm" />
       </Link>
       <div className="flex-1" />
-      <span className="text-xs text-txt-4 font-mono">v1.0.6</span>
+      <span className="text-xs text-txt-4 font-mono">v1.0.7</span>
       <span className="text-xs text-txt-4">🔒 Runs in your browser</span>
-      <a
-        href="/api/logout"
-        className="text-xs text-txt-4 hover:text-txt transition-colors"
-        title="Lock and return to access page"
-      >
-        Lock
-      </a>
     </nav>
   );
 }
