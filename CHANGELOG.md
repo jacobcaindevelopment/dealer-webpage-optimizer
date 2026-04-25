@@ -147,3 +147,7 @@ The `splitTextToSize(text, width)` parameter is a **text-column width** measured
 - Removed password gate — app is now public
 - Deleted middleware.ts, app/access, api/access, api/logout
 - Removed Lock link from Nav
+
+## v1.0.8
+- Added branded footer: Built by Jacob Cain · jacobcain.me · © JC Development
+- Version bump across Nav, package.json, VERSION.md
