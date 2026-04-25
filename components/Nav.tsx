@@ -9,7 +9,7 @@ export default function Nav() {
         <Logo size="sm" />
       </Link>
       <div className="flex-1" />
-      <span className="text-xs text-txt-4 font-mono">v1.0.9</span>
+      <span className="text-xs text-txt-4 font-mono">v1.0.10</span>
       <span className="text-xs text-txt-4">🔒 Runs in your browser</span>
     </nav>
   );

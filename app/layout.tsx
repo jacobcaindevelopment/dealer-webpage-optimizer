@@ -18,11 +18,19 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: "Dealer Webpage Optimizer",
   description: "Automotive-specific SEO, UX, and conversion analysis for dealership websites.",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${barlowCondensed.variable} ${dmSans.variable}`}>
+      <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+      </head>
       <body className="font-body bg-bg min-h-screen">
         {children}
       </body>

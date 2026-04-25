@@ -154,3 +154,7 @@ The `splitTextToSize(text, width)` parameter is a **text-column width** measured
 
 ## v1.0.9
 - Hotfix: removed jacobcain.me from footer (Jacob Cain name still links to jacobcain.me)
+
+## v1.0.10
+- Wired SVG favicon: added icons metadata + <link rel="icon"> in layout.tsx (favicon.svg shipped in v1.0.9 but was not referenced)
+- Linked "JC Development" in footer copyright to jacobcain.me

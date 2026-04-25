@@ -116,7 +116,7 @@ export default function Dashboard() {
         {/* Footer */}
         <footer className="border-t border-border mt-auto py-8 text-center space-y-1">
           <p className="text-xs text-txt-4">
-            Dealer Webpage Optimizer v1.0.9 · Automotive SEO &amp; Conversion Analysis Tool
+            Dealer Webpage Optimizer v1.0.10 · Automotive SEO &amp; Conversion Analysis Tool
           </p>
           <p className="text-xs text-txt-4">
             Built by{" "}
@@ -128,7 +128,16 @@ export default function Dashboard() {
             >
               Jacob Cain
             </a>
-            {" "}· © {new Date().getFullYear()} JC Development. All rights reserved.
+            {" "}· © {new Date().getFullYear()}{" "}
+            <a
+              href="https://jacobcain.me"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-txt-3 hover:text-white transition-colors underline underline-offset-2"
+            >
+              JC Development
+            </a>
+            . All rights reserved.
           </p>
         </footer>
       </main>
