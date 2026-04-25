@@ -151,3 +151,6 @@ The `splitTextToSize(text, width)` parameter is a **text-column width** measured
 ## v1.0.8
 - Added branded footer: Built by Jacob Cain · jacobcain.me · © JC Development
 - Version bump across Nav, package.json, VERSION.md
+
+## v1.0.9
+- Hotfix: removed jacobcain.me from footer (Jacob Cain name still links to jacobcain.me)
