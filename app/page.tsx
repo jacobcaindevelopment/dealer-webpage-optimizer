@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Logo from "@/components/Logo";
 import { getHistory, getFullAudit, clearSession, saveSession } from "@/store/audit";
 import { HistoryEntry, Priority } from "@/lib/types";
+import { VERSION } from "@/lib/version";
 
 const PRI_COLOR: Record<Priority, string> = {
   "Fix Now": "text-red",
@@ -116,7 +117,7 @@ export default function Dashboard() {
         {/* Footer */}
         <footer className="border-t border-border mt-auto py-8 text-center space-y-1">
           <p className="text-xs text-txt-4">
-            Dealer Webpage Optimizer v1.0.10 · Automotive SEO &amp; Conversion Analysis Tool
+            Dealer Webpage Optimizer v{VERSION} · Automotive SEO &amp; Conversion Analysis Tool
           </p>
           <p className="text-xs text-txt-4">
             Built by{" "}

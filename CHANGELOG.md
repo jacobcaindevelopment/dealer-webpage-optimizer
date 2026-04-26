@@ -158,3 +158,11 @@ The `splitTextToSize(text, width)` parameter is a **text-column width** measured
 ## v1.0.10
 - Wired SVG favicon: added icons metadata + <link rel="icon"> in layout.tsx (favicon.svg shipped in v1.0.9 but was not referenced)
 - Linked "JC Development" in footer copyright to jacobcain.me
+
+## v1.0.11
+- Centralized version string into lib/version.ts
+- Fixed PDF footer hardcoded v1.0.6 — now reads from VERSION constant
+- Wired FETCH_USER_AGENT and FETCH_TIMEOUT_MS env vars in api/fetch-page/route.ts
+- Updated README version references (was v1.0.2)
+- Added public/robots.txt
+- Added app/sitemap.ts

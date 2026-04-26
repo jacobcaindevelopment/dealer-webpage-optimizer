@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const TIMEOUT_MS = 12_000;
-const USER_AGENT =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36";
+const TIMEOUT_MS = process.env.FETCH_TIMEOUT_MS ? Number(process.env.FETCH_TIMEOUT_MS) : 12_000;
+const USER_AGENT = process.env.FETCH_USER_AGENT ?? "Mozilla/5.0 (compatible; DealerWebpageOptimizer/1.0)";
 
 export async function POST(req: NextRequest) {
   let url: string;
