@@ -1,6 +1,6 @@
 # Dealer Webpage Optimizer
 
-**v1.0.11** · Automotive AI Page Analysis Tool
+**v1.0.13** · Automotive AI Page Analysis Tool
 
 A performance-focused web application that analyzes high-traffic automotive dealership website pages and delivers prioritized, actionable recommendations — including suggested replacement content — for SEO, conversions, and customer experience.
 
@@ -48,7 +48,7 @@ It produces:
 ### Setup
 
 ```bash
-cd dealer-webpage-optimizer-v1.0.11
+cd dealer-webpage-optimizer-v1.0.13
 npm install
 npm run dev
 ```

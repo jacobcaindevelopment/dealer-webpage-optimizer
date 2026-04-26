@@ -173,3 +173,7 @@ The `splitTextToSize(text, width)` parameter is a **text-column width** measured
 - In-memory rate limiting: 30 requests/min per IP
 - Origin check on /api/fetch-page — blocks cross-origin abuse
 - Security headers added via next.config.mjs: X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, Content-Security-Policy
+
+## v1.0.13
+- Version bump
+- README synced to current version (was drifted to v1.0.11)
