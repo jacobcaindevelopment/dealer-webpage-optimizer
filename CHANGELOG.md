@@ -166,3 +166,10 @@ The `splitTextToSize(text, width)` parameter is a **text-column width** measured
 - Updated README version references (was v1.0.2)
 - Added public/robots.txt
 - Added app/sitemap.ts
+
+## v1.0.12
+- SSRF blocklist expanded: added 169.254.x (AWS metadata), full RFC1918, carrier-grade NAT, IPv6 private ranges, DNS rebinding protection
+- Response size capped at 5MB to prevent memory exhaustion
+- In-memory rate limiting: 30 requests/min per IP
+- Origin check on /api/fetch-page — blocks cross-origin abuse
+- Security headers added via next.config.mjs: X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, Content-Security-Policy
