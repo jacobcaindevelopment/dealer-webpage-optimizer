@@ -4,6 +4,16 @@ All notable changes to Dealer Webpage Optimizer are documented here.
 
 ---
 
+## [1.0.14] - 2026-07-22
+
+### Fixed
+- **Three double-escaped regexes in `lib/analysis-engine.ts` that could never match**, causing false-positive findings on every audit:
+  - `/\\d+/` → `/\d+/` — "No Inventory Count in Title Tag" fired on every used/certified SRP even when the title contained a count (e.g. "200+ Used Cars").
+  - Homepage location-signal regexes — "Homepage Title Missing Location Signal" fired on every homepage even when the title contained a city/state (e.g. "Cincinnati, OH").
+  - `/^www\\./` → `/^www\./` — suggested intro copy rendered "our team at www.domain.com" instead of stripping the `www.` prefix.
+
+---
+
 ## [1.0.6] — 2026-03-21
 
 ### Patch — Branded Password Splash + Route Protection

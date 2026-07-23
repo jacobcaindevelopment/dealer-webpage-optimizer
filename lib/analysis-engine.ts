@@ -207,7 +207,7 @@ function pageTypeFindings(type: PageType, meta: PageMeta | null, domain: string)
 
     case "used-inventory-srp":
     case "certified-inventory-srp": {
-      if (meta && meta.titleTag && !/\\d+/.test(meta.titleTag)) {
+      if (meta && meta.titleTag && !/\d+/.test(meta.titleTag)) {
         F.push(mkFinding("Automotive", "high", true,
           "No Inventory Count in Title Tag",
           "Buyers scanning search results are drawn to pages that communicate volume. '200+ Used Cars for Sale' outperforms 'Used Cars' in CTR because it signals selection and legitimacy.",
@@ -339,7 +339,7 @@ function pageTypeFindings(type: PageType, meta: PageMeta | null, domain: string)
     }
 
     case "homepage": {
-      if (meta && meta.titleTag && !/\\b(city|county|\\d{5}|near|\\w+ville|\\w+town|\\w+burg)\\b/i.test(meta.titleTag) && !/\\b[A-Z][a-z]+(,\\s*[A-Z]{2})\\b/.test(meta.titleTag)) {
+      if (meta && meta.titleTag && !/\b(city|county|\d{5}|near|\w+ville|\w+town|\w+burg)\b/i.test(meta.titleTag) && !/\b[A-Z][a-z]+,\s*[A-Z]{2}\b/.test(meta.titleTag)) {
         F.push(mkFinding("SEO", "high", true,
           "Homepage Title Missing Location Signal",
           "The homepage title appears to lack a city or location keyword. Local dealerships depend on geo-targeted searches ('Toyota dealer near me', '[Brand] dealer [City]') — not including location in the title is a critical missed opportunity.",
@@ -423,7 +423,7 @@ function calcWhatIsWorking(meta: PageMeta | null, type: PageType): string[] {
 // ─── Content Suggestions ──────────────────────────────────────────────────────
 
 function buildSuggestedContent(type: PageType, meta: PageMeta | null, domain: string, title: string): SuggestedContent {
-  const domainClean = domain.replace(/^www\\./, "");
+  const domainClean = domain.replace(/^www\./, "");
 
   const contentMap: Record<PageType, SuggestedContent> = {
     "used-inventory-srp": {
