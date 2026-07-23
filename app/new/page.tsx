@@ -21,8 +21,8 @@ const SAMPLE_DATA = `Page path and screen class,Views,Active users
 /finance,5980,2210
 /value-your-trade,4615,1720
 /specials,4180,1540
-/audi-q5,3740,1380
-/audi-a6,3115,1140
+/vdp/2023-audi-q5-premium,3740,1380
+/research/audi-a6,3115,1140
 /schedule-service,2860,1050`;
 
 export default function NewAuditPage() {
@@ -187,12 +187,13 @@ export default function NewAuditPage() {
           {tab === "demo" && (
             <div>
               <div className="bg-amb/5 border border-amb/20 rounded-lg p-4 mb-4 text-xs text-txt-3 leading-relaxed">
-                Loads a fictional automotive dataset for demo and testing purposes.
+                Loads a fictional automotive dataset for demo and testing purposes. Sample pages are
+                analyzed from bundled snapshots — no network requests are made.
               </div>
               <button
                 className="btn-ghost"
                 onClick={() => {
-                  if (!url.trim()) setUrl("https://demo-premium-auto.com");
+                  setUrl("https://demo-premium-auto.com");
                   handleParse(SAMPLE_DATA, "sample data");
                 }}
               >

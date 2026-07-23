@@ -23,3 +23,6 @@ yarn-debug.log*
 # Misc
 *.tsbuildinfo
 next-env.d.ts
+
+# local dev tooling
+.claude/

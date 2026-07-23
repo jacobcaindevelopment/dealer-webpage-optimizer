@@ -7,6 +7,7 @@ import PageTypeChip from "@/components/PageTypeChip";
 import { getSession, saveSession, saveToHistory } from "@/store/audit";
 import { extractMeta } from "@/lib/meta-extractor";
 import { analyzePage } from "@/lib/analysis-engine";
+import { DEMO_DOMAIN, getDemoHtml } from "@/lib/demo-data";
 import { ParsedPage, PageResult, FetchStatus, DPOSession } from "@/lib/types";
 
 const STEPS = [
@@ -65,21 +66,28 @@ export default function AnalyzePage() {
       );
       setCurrent(i);
 
-      // Fetch page server-side
+      // Fetch page server-side (sample audits load bundled snapshots — no network)
       let html: string | null = null;
       let fetchStatus: FetchStatus = "error";
 
-      try {
-        const res = await fetch("/api/fetch-page", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: page.url }),
-        });
-        const data = await res.json();
-        fetchStatus = data.status as FetchStatus;
-        html = data.html || null;
-      } catch {
-        fetchStatus = "error";
+      const demoHtml = s.domain === DEMO_DOMAIN ? getDemoHtml(page.path) : null;
+      if (demoHtml) {
+        await new Promise((r) => setTimeout(r, 350));
+        html = demoHtml;
+        fetchStatus = "success";
+      } else {
+        try {
+          const res = await fetch("/api/fetch-page", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: page.url }),
+          });
+          const data = await res.json();
+          fetchStatus = data.status as FetchStatus;
+          html = data.html || null;
+        } catch {
+          fetchStatus = "error";
+        }
       }
 
       // Update status: analyzing

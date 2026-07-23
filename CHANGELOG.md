@@ -4,6 +4,18 @@ All notable changes to Dealer Webpage Optimizer are documented here.
 
 ---
 
+## [1.0.15] - 2026-07-22
+
+### Added
+- **Offline demo mode** — `lib/demo-data.ts` bundles realistic HTML snapshots for all 10 sample-audit pages of the fictional `demo-premium-auto.com`. Sample audits now analyze these snapshots directly instead of fetching a domain that doesn't exist (every sample page previously came back "blocked" with no real findings). Each snapshot is engineered to produce a credible spread of results: high-traffic pages with critical automotive findings, a clean research page, and every priority tier represented.
+
+### Changed
+- Sample data VDP/research paths (`/audi-q5` → `/vdp/2023-audi-q5-premium`, `/audi-a6` → `/research/audi-a6`) so page-type classification shows a Vehicle Detail Page and OEM Research page in the demo.
+- "Load Sample Data" now always sets the demo URL, preventing a half-configured session when a real URL was typed first.
+- Sample Data tab copy notes that snapshots are bundled and no network requests are made.
+
+---
+
 ## [1.0.14] - 2026-07-22
 
 ### Fixed
