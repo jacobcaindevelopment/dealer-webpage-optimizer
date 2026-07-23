@@ -39,7 +39,7 @@ export default function Dashboard() {
     { icon: "📊", title: "GA4 Traffic Data", desc: "Upload your GA4 CSV. Pages ranked by real traffic, not guesswork." },
     { icon: "✍️", title: "Replacement Copy", desc: "H1 rewrites, intro paragraphs, CTAs, FAQs — ready to implement." },
     { icon: "📄", title: "PDF Reports", desc: "Professional reports for client presentations and internal teams." },
-    { icon: "⚡", title: "Priority Scoring", desc: "Opportunity score = traffic × business value × quality gap × fixability." },
+    { icon: "⚡", title: "Priority Scoring", desc: "0–100 opportunity score: traffic weight + page business value + issue severity." },
   ];
 
   return (
@@ -48,7 +48,7 @@ export default function Dashboard() {
       <nav className="h-14 bg-surface border-b border-border flex items-center px-6 sticky top-0 z-50">
         <Logo size="sm" />
         <div className="flex-1" />
-        <span className="text-xs text-txt-4">🔒 Runs entirely in your browser</span>
+        <span className="text-xs text-txt-4">🔒 No login · Your audit data stays in your browser</span>
       </nav>
 
       <main className="max-w-5xl mx-auto px-6 py-16">
@@ -81,6 +81,29 @@ export default function Dashboard() {
               <p className="text-xs text-txt-3 leading-relaxed">{f.desc}</p>
             </div>
           ))}
+        </div>
+
+        {/* How it works */}
+        <div className="mb-16">
+          <h2 className="font-display font-bold text-lg uppercase tracking-wider text-txt-2 mb-5 text-center">
+            How It Works
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {[
+              { n: 1, title: "Upload Your Traffic Data", desc: "Export \"Pages and screens\" from GA4 and drop the CSV in — or paste the table straight from the report." },
+              { n: 2, title: "Pick the Pages That Matter", desc: "Your pages are ranked by real traffic. The top 10 are pre-selected; audit up to 25 at once." },
+              { n: 3, title: "Automatic Analysis", desc: "Each page is fetched and checked against automotive-specific SEO, content, and conversion rules." },
+              { n: 4, title: "Act on the Results", desc: "Prioritized findings, ready-to-use replacement copy, and a client-ready PDF report." },
+            ].map((s) => (
+              <div key={s.n} className="card p-5 relative">
+                <div className="w-8 h-8 rounded-full bg-red text-white font-display font-bold text-base flex items-center justify-center mb-3">
+                  {s.n}
+                </div>
+                <h3 className="font-display font-bold text-sm uppercase tracking-wider text-txt mb-1.5">{s.title}</h3>
+                <p className="text-xs text-txt-3 leading-relaxed">{s.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* History */}

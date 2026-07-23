@@ -4,6 +4,17 @@ All notable changes to Dealer Webpage Optimizer are documented here.
 
 ---
 
+## [1.0.17] - 2026-07-22
+
+### Added
+- **"How It Works" section on the landing page** — four plain-English steps (upload GA4 data → pick pages → automatic analysis → act on results) so first-time viewers understand the tool without a walkthrough.
+
+### Fixed
+- **Contradictory privacy claim** — nav badges said "Runs entirely in your browser" while the features grid advertised server-side fetching. Badges now say "No login · Your audit data stays in your browser," which is accurate (analysis results and history never leave the browser; only page fetching goes through the server).
+- **Priority-score formula copy** — the feature card claimed "traffic × business value × quality gap × fixability"; the actual scorer is additive (traffic weight + page business value + issue severity, 0–100). Copy now matches the implementation.
+
+---
+
 ## [1.0.16] - 2026-07-22
 
 ### Added

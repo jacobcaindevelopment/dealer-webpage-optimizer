@@ -11,7 +11,7 @@ export default function Nav() {
       </Link>
       <div className="flex-1" />
       <span className="text-xs text-txt-4 font-mono">v{VERSION}</span>
-      <span className="text-xs text-txt-4">🔒 Runs in your browser</span>
+      <span className="text-xs text-txt-4">🔒 Audit data stays in your browser</span>
     </nav>
   );
 }
