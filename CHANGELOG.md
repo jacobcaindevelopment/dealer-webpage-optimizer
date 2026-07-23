@@ -4,6 +4,14 @@ All notable changes to Dealer Webpage Optimizer are documented here.
 
 ---
 
+## [1.0.19] - 2026-07-22
+
+### Fixed
+- `app/sitemap.ts` and `public/robots.txt` pointed at the placeholder `https://your-domain.com`; both now use the production URL `https://dealer-webpage-optimizer.vercel.app`.
+- README drift: header version (stuck at v1.0.13), tech stack (said Next.js 14; installed is Next.js 16), setup path, and the blocked-pages limitation now documents the paste-HTML fallback.
+
+---
+
 ## [1.0.18] - 2026-07-22
 
 ### Added

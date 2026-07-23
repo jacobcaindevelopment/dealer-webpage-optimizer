@@ -1,6 +1,6 @@
 # Dealer Webpage Optimizer
 
-**v1.0.13** · Automotive AI Page Analysis Tool
+**v1.0.19** · Automotive AI Page Analysis Tool
 
 A performance-focused web application that analyzes high-traffic automotive dealership website pages and delivers prioritized, actionable recommendations — including suggested replacement content — for SEO, conversions, and customer experience.
 
@@ -30,7 +30,7 @@ It produces:
 
 ## Tech Stack
 
-- **Next.js 14** (App Router)
+- **Next.js 16** (App Router)
 - **TypeScript** (strict)
 - **Tailwind CSS** (custom design system)
 - **jsPDF + jspdf-autotable** (PDF export)
@@ -48,7 +48,7 @@ It produces:
 ### Setup
 
 ```bash
-cd dealer-webpage-optimizer-v1.0.13
+cd dealer-webpage-optimizer-v1.0.19
 npm install
 npm run dev
 ```
@@ -112,7 +112,7 @@ Alternatively, paste the table data directly (copy from GA4 table → paste into
 
 ## Limitations
 
-- **Blocked pages**: Many dealership websites (Dealer.com, DealerSocket, CDK) use Cloudflare or IP-based bot protection. Blocked pages receive a generic page-type-based analysis rather than HTML-specific analysis.
+- **Blocked pages**: Many dealership websites (Dealer.com, DealerSocket, CDK) use Cloudflare or IP-based bot protection. Blocked pages receive a page-type-based analysis automatically — and any blocked page can be fully analyzed via the "Paste page HTML" fallback on the results screen (view source in your browser, paste, re-analyze).
 - **Dynamic content**: JavaScript-rendered inventory counts may not be visible in the static HTML fetch.
 - **No AI generation**: Recommendations are rules-based and automotive-specific, not AI-generated. This means consistent, reliable output but not infinitely varied.
 - **Single session**: Audit results are stored in sessionStorage. Closing the browser tab clears the current session.
