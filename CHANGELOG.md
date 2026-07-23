@@ -4,6 +4,15 @@ All notable changes to Dealer Webpage Optimizer are documented here.
 
 ---
 
+## [1.0.20] - 2026-07-23
+
+### Fixed
+- **PDF text corruption and right-margin overflow** — lines containing characters outside jsPDF's built-in WinAnsi font encoding (✓ checkmarks, → arrows) flipped jsPDF into a fallback rendering mode whose glyph widths don't match `splitTextToSize`'s measurements: those lines rendered letterspaced, overflowed the right page edge, and the ✓/→ glyphs printed as garbage (`'`, `!'`). The bug surfaced once v1.0.15's demo mode started producing rich findings; blocked-page reports never exercised these strings.
+  - Added a central `pdfSafe()` WinAnsi sanitizer (✓ → `•`, → → `»`, smart quotes normalized, ellipsis → `...`, all other non-CP1252 characters stripped) applied to **every** string drawn into the PDF — wrapped text, callout boxes, section headers, page titles/subtitles, finding titles, quick wins, executive-summary cells, cover, and footers — so measurement and rendering always see the same string.
+  - Verified by generating a report through the real `generatePDF` with the exact failing strings and visually inspecting the output: all text contained within margins, correct glyphs.
+
+---
+
 ## [1.0.19] - 2026-07-22
 
 ### Fixed

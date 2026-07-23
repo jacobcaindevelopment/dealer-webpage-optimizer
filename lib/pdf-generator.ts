@@ -38,6 +38,25 @@ const CALLOUT_PAD_T = 2;  // space above text inside box
 const CALLOUT_PAD_B = 3;  // space below text inside box
 const CALLOUT_SIZE  = 7.5; // font size inside every callout/recommendation box
 
+// ── WinAnsi sanitizer ────────────────────────────────────────────────────────
+// jsPDF's built-in Helvetica only encodes WinAnsi (CP1252). Characters outside
+// it (✓, →, ⚡, emoji…) flip jsPDF into a fallback rendering mode whose glyph
+// widths don't match splitTextToSize's measurements — lines render letterspaced
+// and overflow the page. EVERY string drawn into the PDF must pass through here.
+function pdfSafe(text: string): string {
+  return String(text)
+    .replace(/✓/g, "•")
+    .replace(/[→⟶➔➜]/g, "»")
+    .replace(/[✕✖×]/g, "x")
+    .replace(/[⚡🔒🎯🌐📊✍️📄👁⭐📞🔍]/g, "")
+    .replace(/[‘’ʼ]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/…/g, "...")
+    .replace(/[−]/g, "-")
+    // Keep printable ASCII, Latin-1, and the CP1252 punctuation jsPDF encodes
+    .replace(/[^\x20-\x7E\xA0-\xFF–—•€™]/g, "");
+}
+
 export async function generatePDF(
   results: PageResult[],
   domain: string,
@@ -81,7 +100,7 @@ export async function generatePDF(
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7);
     rgb(80, 80, 80);
-    doc.text(label, pageW / 2, pageH - 8, { align: "center" });
+    doc.text(pdfSafe(label), pageW / 2, pageH - 8, { align: "center" });
   }
 
   function ensureSpace(
@@ -116,7 +135,7 @@ export async function generatePDF(
     doc.setFont("helvetica", style);
     doc.setFontSize(size);
     rgb(...color);
-    const lines: string[] = doc.splitTextToSize(text, maxW);
+    const lines: string[] = doc.splitTextToSize(pdfSafe(text), maxW);
     for (const line of lines) {
       y = ensureSpace(y, lh + 1, accent, footer);
       // Re-assert font state: ensureSpace → drawFooter resets to 7 pt
@@ -141,7 +160,7 @@ export async function generatePDF(
     doc.setFont("helvetica", "bold");
     doc.setFontSize(size);
     rgb(...color);
-    doc.text(label, TEXT_X, y);
+    doc.text(pdfSafe(label), TEXT_X, y);
     return y + 5;
   }
 
@@ -176,8 +195,9 @@ export async function generatePDF(
     doc.setFont("helvetica", "normal");
     doc.setFontSize(CALLOUT_SIZE);
 
-    // 2. Split using inner text width (not full box width).
-    const lines: string[] = doc.splitTextToSize(text, CALLOUT_TEXT_W);
+    // 2. Split using inner text width (not full box width). Sanitize FIRST so
+    //    the measured string is exactly the rendered string.
+    const lines: string[] = doc.splitTextToSize(pdfSafe(text), CALLOUT_TEXT_W);
 
     // 3. Compute dynamic box height from actual wrapped line count.
     const boxH = lines.length * SMALL_LINE_H + CALLOUT_PAD_T + CALLOUT_PAD_B + 2;
@@ -221,7 +241,7 @@ export async function generatePDF(
 
   doc.setFontSize(13);
   rgb(170, 170, 170);
-  doc.text(domain, TEXT_X, 94);
+  doc.text(pdfSafe(domain), TEXT_X, 94);
 
   const dateStr = new Date().toLocaleDateString("en-US", {
     year: "numeric", month: "long", day: "numeric",
@@ -298,7 +318,7 @@ export async function generatePDF(
     head: [["#", "Page", "Type", "Priority", "Score", metricLabel, "Issues"]],
     body: sorted.map((r, i) => [
       String(i + 1),
-      r.page.path.length > 36 ? r.page.path.slice(0, 33) + "…" : r.page.path,
+      pdfSafe(r.page.path.length > 36 ? r.page.path.slice(0, 33) + "..." : r.page.path),
       r.page.pageType.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
       r.priority,
       String(r.opportunityScore),
@@ -359,14 +379,14 @@ export async function generatePDF(
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
     rgb(240, 240, 240);
-    const titleLines: string[] = doc.splitTextToSize(r.page.title || r.page.path, TEXT_W - 8);
+    const titleLines: string[] = doc.splitTextToSize(pdfSafe(r.page.title || r.page.path), TEXT_W - 8);
     doc.text(titleLines.slice(0, 2), TEXT_X + 6, py + 1);
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7.5);
     rgb(130, 130, 130);
     const subtitle = `${r.page.path}  ·  ${r.page.views.toLocaleString()} ${metricLabel}  ·  Score ${r.opportunityScore}  ·  ${r.priority}`;
-    const subLines: string[] = doc.splitTextToSize(subtitle, TEXT_W - 8);
+    const subLines: string[] = doc.splitTextToSize(pdfSafe(subtitle), TEXT_W - 8);
     doc.text(subLines.slice(0, 2), TEXT_X + 6, py + 13);
 
     py += 28;
@@ -392,7 +412,7 @@ export async function generatePDF(
       doc.setFont("helvetica", "bold");
       doc.setFontSize(8);
       rgb(225, 225, 225);
-      const fTitleLines: string[] = doc.splitTextToSize(f.title, TEXT_W - 8);
+      const fTitleLines: string[] = doc.splitTextToSize(pdfSafe(f.title), TEXT_W - 8);
       doc.text(fTitleLines.slice(0, 2), TEXT_X + 8, py);
       py += fTitleLines.slice(0, 2).length * LINE_H + 1;
 
@@ -481,7 +501,7 @@ export async function generatePDF(
     // This must match exactly so cardH is correct.
     doc.setFont("helvetica", "normal");
     doc.setFontSize(CALLOUT_SIZE);
-    const recText = `→  ${item.finding.recommendation}`;
+    const recText = pdfSafe(`→  ${item.finding.recommendation}`);
     const recLines: string[] = doc.splitTextToSize(recText, CALLOUT_TEXT_W);
 
     // Card = title row + page path row + recommendation callout block
@@ -498,13 +518,13 @@ export async function generatePDF(
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8);
     rgb(220, 220, 220);
-    doc.text(`${i + 1}.  ${item.finding.title}`, TEXT_X + 4, qy + 3);
+    doc.text(pdfSafe(`${i + 1}.  ${item.finding.title}`), TEXT_X + 4, qy + 3);
 
     // Page path
     doc.setFont("helvetica", "normal");
     doc.setFontSize(7);
     rgb(130, 130, 130);
-    doc.text(item.page, TEXT_X + 4, qy + 3 + LINE_H);
+    doc.text(pdfSafe(item.page), TEXT_X + 4, qy + 3 + LINE_H);
 
     // Recommendation — via calloutBox geometry, font re-asserted here too
     const recY = qy + 3 + LINE_H + SMALL_LINE_H + 1;
