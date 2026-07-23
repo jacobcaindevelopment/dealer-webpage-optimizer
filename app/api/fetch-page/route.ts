@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { promises as dns } from "dns";
 
 const TIMEOUT_MS = process.env.FETCH_TIMEOUT_MS ? Number(process.env.FETCH_TIMEOUT_MS) : 12_000;
-const USER_AGENT = process.env.FETCH_USER_AGENT ?? "Mozilla/5.0 (compatible; DealerWebpageOptimizer/1.0)";
+// A realistic browser UA fetches far more successfully than a bot-labeled one.
+// Sites doing TLS fingerprinting (Imperva, Cloudflare) will still refuse — those
+// are classified as "bot-blocked" below and handled by the paste-HTML fallback.
+const USER_AGENT = process.env.FETCH_USER_AGENT ??
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
 
 // Cap responses at 5MB to prevent memory exhaustion
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -142,12 +146,28 @@ export async function POST(req: NextRequest) {
         "Accept-Encoding": "gzip, deflate, br",
         "Cache-Control": "no-cache",
         Connection: "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "none",
+        "Sec-Fetch-User": "?1",
       },
     });
 
     clearTimeout(timer);
 
-    if (response.status === 403 || response.status === 401) {
+    // Dealer platforms (Dealer.com, CDK, Sincro) sit behind Imperva/Cloudflare and
+    // answer automated requests with 403/429/503 — that's bot protection, not a
+    // broken page. Surface it as such so the UI can offer the paste-HTML fallback.
+    if (response.status === 403 || response.status === 429 || response.status === 503) {
+      return NextResponse.json({
+        status: "bot-blocked",
+        httpStatus: response.status,
+        error: `The site's bot protection refused the automated request (HTTP ${response.status}).`,
+      });
+    }
+
+    if (response.status === 401) {
       return NextResponse.json({
         status: "access-denied",
         httpStatus: response.status,
@@ -191,11 +211,15 @@ export async function POST(req: NextRequest) {
       html.includes("challenge-platform") ||
       html.includes("Just a moment") ||
       html.includes("DDoS protection by Cloudflare") ||
-      (html.length < 5000 && html.includes("cloudflare"))
+      html.includes("_Incapsula_Resource") ||
+      html.includes("Incapsula incident") ||
+      html.includes("px-captcha") ||
+      html.includes("datadome") ||
+      (html.length < 5000 && (html.includes("cloudflare") || html.includes("imperva")))
     ) {
       return NextResponse.json({
-        status: "blocked",
-        error: "Cloudflare or bot-protection challenge detected. Automated access not possible.",
+        status: "bot-blocked",
+        error: "Bot-protection challenge detected (Cloudflare, Imperva, or similar). Automated access not possible.",
       });
     }
 

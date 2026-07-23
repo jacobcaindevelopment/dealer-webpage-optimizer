@@ -6,8 +6,10 @@ import StepIndicator from "@/components/StepIndicator";
 import PageTypeChip from "@/components/PageTypeChip";
 import PriorityBadge from "@/components/PriorityBadge";
 import FindingCard from "@/components/FindingCard";
-import { getSession } from "@/store/audit";
+import { getSession, saveSession, saveToHistory } from "@/store/audit";
 import { generatePDF } from "@/lib/pdf-generator";
+import { extractMeta } from "@/lib/meta-extractor";
+import { analyzePage } from "@/lib/analysis-engine";
 import { PageResult, DPOSession, Priority } from "@/lib/types";
 
 const STEPS = [
@@ -25,6 +27,8 @@ export default function ResultsPage() {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState<Record<string, string>>({});
   const [exporting, setExporting] = useState(false);
+  const [pasteOpen, setPasteOpen] = useState<Set<string>>(new Set());
+  const [pasteText, setPasteText] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const s = getSession();
@@ -73,6 +77,35 @@ export default function ResultsPage() {
 
   function getTab(id: string) {
     return activeTab[id] || "issues";
+  }
+
+  function togglePaste(id: string) {
+    setPasteOpen((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function reanalyzeFromPaste(r: PageResult) {
+    const html = (pasteText[r.page.id] || "").trim();
+    if (!html || !safeSession) return;
+    const meta = extractMeta(html, r.page.url);
+    const fresh = analyzePage(r.page, meta, "success", safeSession.results.length, safeSession.domain);
+    const updated: DPOSession = {
+      ...safeSession,
+      results: safeSession.results.map((x) => (x.page.id === r.page.id ? fresh : x)),
+    };
+    saveSession(updated);
+    saveToHistory(updated);
+    setSession(updated);
+    setPasteOpen((prev) => {
+      const next = new Set(prev);
+      next.delete(r.page.id);
+      return next;
+    });
+    setPasteText((prev) => ({ ...prev, [r.page.id]: "" }));
   }
 
   async function handleExportPDF() {
@@ -157,10 +190,48 @@ export default function ResultsPage() {
                 {/* Card body */}
                 {open && (
                   <div className="p-5">
-                    {/* Fetch status warning */}
+                    {/* Fetch status warning + paste-HTML fallback */}
                     {r.fetchStatus !== "success" && (
-                      <div className="mb-5 p-3 bg-amb/10 border border-amb/20 rounded-lg text-xs text-amb leading-relaxed">
-                        <span className="font-semibold">Page fetch status: {r.fetchStatus}</span> — Analysis based on page type classification. Manual review recommended.
+                      <div className="mb-5 p-3 bg-amb/10 border border-amb/20 rounded-lg text-xs leading-relaxed">
+                        <div className="flex items-center justify-between gap-3 flex-wrap">
+                          <span className="text-amb">
+                            <span className="font-semibold">
+                              {r.fetchStatus === "bot-blocked"
+                                ? "This page is behind bot protection"
+                                : `Page fetch status: ${r.fetchStatus}`}
+                            </span>
+                            {" "}— analysis below is based on page type only.
+                          </span>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); togglePaste(r.page.id); }}
+                            className="btn-ghost btn-sm flex-shrink-0"
+                          >
+                            {pasteOpen.has(r.page.id) ? "Cancel" : "Paste page HTML"}
+                          </button>
+                        </div>
+                        {pasteOpen.has(r.page.id) && (
+                          <div className="mt-3" onClick={(e) => e.stopPropagation()}>
+                            <p className="text-txt-3 mb-2">
+                              Open <span className="font-mono text-txt-2">{r.page.url}</span> in your browser,
+                              view the page source (<span className="font-mono">Cmd+U</span> / <span className="font-mono">Ctrl+U</span>),
+                              select all, copy, and paste below to run the full analysis.
+                            </p>
+                            <textarea
+                              className="inp font-mono text-xs"
+                              rows={5}
+                              placeholder="<!DOCTYPE html> …"
+                              value={pasteText[r.page.id] || ""}
+                              onChange={(e) => setPasteText((prev) => ({ ...prev, [r.page.id]: e.target.value }))}
+                            />
+                            <button
+                              onClick={() => reanalyzeFromPaste(r)}
+                              disabled={!(pasteText[r.page.id] || "").trim()}
+                              className="btn-primary btn-sm mt-2"
+                            >
+                              Re-analyze This Page →
+                            </button>
+                          </div>
+                        )}
                       </div>
                     )}
 

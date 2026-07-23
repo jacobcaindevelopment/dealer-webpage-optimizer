@@ -4,6 +4,19 @@ All notable changes to Dealer Webpage Optimizer are documented here.
 
 ---
 
+## [1.0.16] - 2026-07-22
+
+### Added
+- **Paste-HTML fallback on results** — pages that can't be fetched (bot protection, timeouts) now show a "Paste page HTML" option on their result card: view the page source in any browser, paste it, and the full analysis runs on the real HTML. Score, priority, findings, and stored history all update. This restores complete analysis for Imperva/Cloudflare-protected dealer platforms (Dealer.com, CDK, Sincro).
+- New `bot-blocked` fetch status: upstream HTTP 403/429/503 and challenge-page markers (Cloudflare, Incapsula/Imperva, DataDome, PerimeterX) are now classified as bot protection instead of a generic error, with clear user-facing copy.
+
+### Changed
+- Server fetch now sends a realistic Chrome user-agent and full browser navigation headers (previously a bot-labeled UA), which succeeds on sites that only filter by UA. `FETCH_USER_AGENT` env override still respected.
+- Fetch-failure finding copy now explains the bot-protection cause and points to the paste-HTML fallback.
+- Analyze-step note names the dealer platforms affected and the fallback.
+
+---
+
 ## [1.0.15] - 2026-07-22
 
 ### Added

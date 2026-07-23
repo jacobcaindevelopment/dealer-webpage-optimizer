@@ -208,7 +208,7 @@ export default function AnalyzePage() {
         <div className="mt-6 p-4 bg-surface-2 border border-border rounded-lg">
           <p className="text-xs text-txt-3 leading-relaxed">
             <span className="text-txt font-semibold">Note: </span>
-            Some pages may be protected by Cloudflare or IP restrictions. If a page can't be fetched, analysis will still run based on page type classification — providing relevant automotive recommendations.
+            Many dealer platforms (Dealer.com, CDK, Sincro) use bot protection that blocks automated fetching. If a page can't be fetched, you'll still get page-type recommendations — and on the results screen you can paste the page's HTML from your browser to run the full analysis.
           </p>
         </div>
       </main>

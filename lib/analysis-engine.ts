@@ -803,15 +803,17 @@ export function analyzePage(
   if (!meta || fetchStatus !== "success") {
     findings.push(mkFinding("Technical", "high", false,
       `Page Could Not Be Fetched (${fetchStatus})`,
-      fetchStatus === "blocked"
-        ? "The page is protected by Cloudflare or a bot-detection system. Server-side analysis was not possible."
+      fetchStatus === "bot-blocked"
+        ? "The page is protected by a bot-detection service (Cloudflare, Imperva, or similar) that refuses automated requests. This is common on dealer platforms like Dealer.com and CDK."
+        : fetchStatus === "blocked"
+        ? "The page's address could not be safely resolved, so it was not fetched."
         : fetchStatus === "timeout"
         ? "The page took too long to respond. This may indicate server performance issues affecting both users and search crawlers."
         : fetchStatus === "access-denied"
-        ? "The server returned a 403 Forbidden error. The page may be gated or restricted."
+        ? "The server rejected the request as unauthorized. The page may be gated or restricted."
         : "The page could not be fetched. Recommendations below are based on page type classification.",
-      "Manually review this page using your browser's developer tools (F12 → Elements). Check the items in the action plan below against the live page.",
-      "Manual review required — automated analysis not available for this page."
+      "Open this page in your browser, view its source (Cmd+U / Ctrl+U), copy everything, and use the \"Paste page HTML\" option on this card to run the full analysis.",
+      "Full analysis available via the paste-HTML fallback — no automated access required."
     ));
   }
 
