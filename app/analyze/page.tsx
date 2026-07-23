@@ -100,9 +100,11 @@ export default function AnalyzePage() {
       const result = analyzePage(page, meta, fetchStatus, selected.length, s.domain);
       results.push(result);
 
-      // Update status: done
+      // Update status: done (or failed if the page couldn't be fetched — analysis
+      // still ran on page-type classification, but it's partial)
+      const finalStatus: PageStatus = fetchStatus === "success" ? "done" : "failed";
       setProgress((prev) =>
-        prev.map((pp) => pp.page.id === page.id ? { ...pp, status: "done", fetchStatus, result } : pp)
+        prev.map((pp) => pp.page.id === page.id ? { ...pp, status: finalStatus, fetchStatus, result } : pp)
       );
 
       // Small delay to prevent hammering
@@ -131,7 +133,7 @@ export default function AnalyzePage() {
     fetching: "Fetching page…",
     analyzing: "Analyzing…",
     done: "Complete",
-    failed: "Failed",
+    failed: "Fetch failed",
   };
 
   const doneCount = progress.filter((p) => p.status === "done" || p.status === "failed").length;
@@ -196,7 +198,7 @@ export default function AnalyzePage() {
               <PageTypeChip type={p.page.pageType} />
               <div className="text-xs text-txt-3 w-24 text-right flex-shrink-0">
                 {STATUS_LABEL[p.status]}
-                {p.fetchStatus && p.fetchStatus !== "success" && p.status === "done" && (
+                {p.fetchStatus && p.fetchStatus !== "success" && p.status === "failed" && (
                   <div className="text-amb text-xs">{p.fetchStatus}</div>
                 )}
               </div>

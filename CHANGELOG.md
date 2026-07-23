@@ -4,6 +4,21 @@ All notable changes to Dealer Webpage Optimizer are documented here.
 
 ---
 
+## [1.0.18] - 2026-07-22
+
+### Added
+- **Recent Audits management** — per-entry delete (✕ on hover), "Clear all" button, and a visible note that history is stored only in the viewer's own browser (localStorage was always per-browser; now the UI says so).
+
+### Changed
+- Results cards now sort by opportunity score inside each priority tier, matching the PDF executive summary's ordering.
+- Analyze step now shows a distinct "Fetch failed" state (red ✕) for pages that couldn't be fetched, instead of labeling them "Complete" — the previously dead `failed` state is wired up.
+- Stats row on results is responsive (`2/3/5` columns) instead of a fixed 5-column grid.
+
+### Fixed
+- Opening a history entry whose stored data is gone now shows an inline notice instead of a browser `alert()`.
+
+---
+
 ## [1.0.17] - 2026-07-22
 
 ### Added

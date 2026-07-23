@@ -45,7 +45,9 @@ export default function ResultsPage() {
 
   const safeSession = session;
   const results = [...safeSession.results].sort(
-    (a, b) => PRI_ORDER.indexOf(a.priority) - PRI_ORDER.indexOf(b.priority)
+    (a, b) =>
+      PRI_ORDER.indexOf(a.priority) - PRI_ORDER.indexOf(b.priority) ||
+      b.opportunityScore - a.opportunityScore
   );
 
   const allFindings = results.flatMap((r) => r.findings);
@@ -141,7 +143,7 @@ export default function ResultsPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-5 gap-3 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mb-8">
           {stats.map((s) => (
             <div key={s.label} className="card p-4">
               <div className={`font-display font-bold text-3xl ${s.color || "text-txt"}`}>{s.value}</div>

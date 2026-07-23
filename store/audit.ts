@@ -99,6 +99,23 @@ export function getFullAudit(id: string): DPOSession | null {
   }
 }
 
+/** Remove one audit from history and delete its stored full data. */
+export function removeFromHistory(id: string): void {
+  if (typeof window === "undefined") return;
+  const updated = getHistory().filter((h) => h.id !== id);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+  localStorage.removeItem(FULL_AUDIT_PREFIX + id);
+}
+
+/** Delete all stored audits and the history index. */
+export function clearHistory(): void {
+  if (typeof window === "undefined") return;
+  for (const h of getHistory()) {
+    localStorage.removeItem(FULL_AUDIT_PREFIX + h.id);
+  }
+  localStorage.removeItem(HISTORY_KEY);
+}
+
 export function getHistory(): HistoryEntry[] {
   if (typeof window === "undefined") return [];
   try {

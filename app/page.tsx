@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Logo from "@/components/Logo";
-import { getHistory, getFullAudit, clearSession, saveSession } from "@/store/audit";
+import { getHistory, getFullAudit, clearSession, saveSession, removeFromHistory, clearHistory } from "@/store/audit";
 import { HistoryEntry, Priority } from "@/lib/types";
 import { VERSION } from "@/lib/version";
 
@@ -16,6 +16,7 @@ const PRI_COLOR: Record<Priority, string> = {
 export default function Dashboard() {
   const router = useRouter();
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [historyError, setHistoryError] = useState<string | null>(null);
 
   useEffect(() => {
     clearSession();
@@ -26,11 +27,25 @@ export default function Dashboard() {
     const full = getFullAudit(h.id);
     if (!full) {
       // Full audit data unavailable (storage cleared or quota exceeded)
-      alert(`Audit data for ${h.domain} is no longer available. Run a new audit to re-generate.`);
+      setHistoryError(`Audit data for ${h.domain} is no longer available in this browser. Run a new audit to re-generate it.`);
       return;
     }
+    setHistoryError(null);
     saveSession(full);
     router.push("/results");
+  }
+
+  function deleteAudit(e: React.MouseEvent, h: HistoryEntry) {
+    e.stopPropagation();
+    removeFromHistory(h.id);
+    setHistory(getHistory());
+    setHistoryError(null);
+  }
+
+  function handleClearHistory() {
+    clearHistory();
+    setHistory([]);
+    setHistoryError(null);
   }
 
   const features = [
@@ -109,10 +124,26 @@ export default function Dashboard() {
         {/* History */}
         {history.length > 0 && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-1">
               <h2 className="font-display font-bold text-lg uppercase tracking-wider text-txt-2">Recent Audits</h2>
-              <span className="text-xs text-txt-4">{history.length} audit{history.length !== 1 ? "s" : ""}</span>
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-txt-4">{history.length} audit{history.length !== 1 ? "s" : ""}</span>
+                <button
+                  onClick={handleClearHistory}
+                  className="text-xs text-txt-4 hover:text-red transition-colors underline underline-offset-2"
+                >
+                  Clear all
+                </button>
+              </div>
             </div>
+            <p className="text-xs text-txt-4 mb-4">
+              Stored only in this browser — no one else can see your audits.
+            </p>
+            {historyError && (
+              <div className="mb-3 p-3 bg-amb/10 border border-amb/20 rounded-lg text-xs text-amb leading-relaxed">
+                {historyError}
+              </div>
+            )}
             <div className="space-y-2">
               {history.map((h) => (
                 <div
@@ -130,6 +161,13 @@ export default function Dashboard() {
                   <span className={`text-xs font-bold uppercase ${PRI_COLOR[h.topPriority]}`}>
                     {h.topPriority}
                   </span>
+                  <button
+                    onClick={(e) => deleteAudit(e, h)}
+                    title="Delete this audit"
+                    className="text-txt-4 hover:text-red text-sm px-1.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                  >
+                    ✕
+                  </button>
                   <span className="text-txt-4 text-base opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">›</span>
                 </div>
               ))}
