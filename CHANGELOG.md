@@ -4,6 +4,13 @@ All notable changes to Dealer Webpage Optimizer are documented here.
 
 ---
 
+## [1.0.21] - 2026-07-23
+
+### Added
+- **README "How the Analysis Works" section** — documents the five-stage rules pipeline (signal extraction → universal SEO rules → page-type rules → findings → priority scoring), why the engine is deliberately rules-based instead of AI-generated, and how the 0–100 opportunity score maps to priority tiers. Limitations bullet now cross-references it.
+
+---
+
 ## [1.0.20] - 2026-07-23
 
 ### Fixed
